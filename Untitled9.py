@@ -1,9 +1,9 @@
-!pip install streamlit
+pip install streamlit
 
-!pip install scikit-learn
+pip install scikit-learn
 
-!pip install numpy
-!pip install pandas
+pip install numpy
+pip install pandas
 
 #Import the necessary libraries
 import streamlit as st
