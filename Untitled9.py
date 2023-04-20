@@ -1,3 +1,10 @@
+!pip install streamlit
+
+!pip install scikit-learn
+
+!pip install numpy
+!pip install pandas
+
 #Import the necessary libraries
 import streamlit as st
 from sklearn.datasets import load_iris
