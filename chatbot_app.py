@@ -1,4 +1,4 @@
-!pip install nltk
+pip install nltk streamlit
 
 import nltk
 nltk.download('punkt')
