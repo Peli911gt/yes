@@ -38,17 +38,13 @@ def get_most_relevant_sentence(query):
     max_similarity = 0
     most_relevant_sentence = ""
     for sentence in corpus:
-        relevance_scores = []
-        for keyword in query:
-            if keyword in sentence:
-                relevance_scores.append(1)
-            else:
-                relevance_scores.append(0)
-        similarity = sum(relevance_scores) / len(query)
+        common_words = set(query).intersection(sentence)
+        similarity = len(common_words) / float(len(query))
         if similarity > max_similarity:
             max_similarity = similarity
             most_relevant_sentence = " ".join(sentence)
     return most_relevant_sentence
+
 
 # Define the chatbot function
 def chatbot(question):
