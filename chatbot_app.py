@@ -3,6 +3,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
+from nltk.probability import FreqDist
 import string
 import streamlit as st
 
@@ -35,7 +36,12 @@ def get_most_relevant_sentence(query):
     for sentence in corpus:
         common_words = set(query).intersection(sentence)
         if len(sentence) > 0:
-            similarity = len(common_words) / float(len(sentence))
+            # Calculate the frequency distribution of common words in the sentence
+            sentence_freq_dist = FreqDist(sentence)
+            # Calculate the relevance score by summing the frequencies of common words
+            relevance_score = sum([sentence_freq_dist[word] for word in common_words])
+            # Normalize the relevance score by the length of the sentence
+            similarity = relevance_score / float(len(sentence))
             if similarity > max_similarity:
                 max_similarity = similarity
                 most_relevant_sentence = " ".join(sentence)
