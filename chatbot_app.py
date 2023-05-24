@@ -14,6 +14,23 @@ with open('moby_dick.txt', 'r', encoding='utf-8') as f:
     data = f.read().replace('\n', ' ')
 # Tokenize the text into sentences
 sentences = sent_tokenize(data)
+
+def get_most_relevant_sentence(query):
+    # Preprocess the query
+    query = preprocess(query)
+    # Compute the similarity between the query and each sentence in the text
+    max_similarity = 0
+    most_relevant_sentence = ""
+    for sentence in corpus:
+        relevance_scores = []
+        for keyword in query:
+            relevance_scores.append(len(set([keyword]).intersection(sentence)) / float(len(set([keyword]).union(sentence))))
+        similarity = sum(relevance_scores) / len(relevance_scores)
+        if similarity > max_similarity:
+            max_similarity = similarity
+            most_relevant_sentence = " ".join(sentence)
+    return most_relevant_sentence
+
 # Define a function to preprocess each sentence
 def preprocess(sentence):
     # Tokenize the sentence into words
