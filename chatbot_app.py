@@ -12,24 +12,9 @@ import streamlit as st
 # Load the text file and preprocess the data
 with open('moby_dick.txt', 'r', encoding='utf-8') as f:
     data = f.read().replace('\n', ' ')
+
 # Tokenize the text into sentences
 sentences = sent_tokenize(data)
-
-def get_most_relevant_sentence(query):
-    # Preprocess the query
-    query = preprocess(query)
-    # Compute the similarity between the query and each sentence in the text
-    max_similarity = 0
-    most_relevant_sentence = ""
-    for sentence in corpus:
-        relevance_scores = []
-        for keyword in query:
-            relevance_scores.append(len(set([keyword]).intersection(sentence)) / float(len(set([keyword]).union(sentence))))
-        similarity = sum(relevance_scores) / len(relevance_scores)
-        if similarity > max_similarity:
-            max_similarity = similarity
-            most_relevant_sentence = " ".join(sentence)
-    return most_relevant_sentence
 
 # Define a function to preprocess each sentence
 def preprocess(sentence):
@@ -43,11 +28,9 @@ def preprocess(sentence):
     words = [lemmatizer.lemmatize(word) for word in words]
     return words
 
-
 # Preprocess each sentence in the text
 corpus = [preprocess(sentence) for sentence in sentences]
 
-# Define a function to find the most relevant sentence given a query
 def get_most_relevant_sentence(query):
     # Preprocess the query
     query = preprocess(query)
@@ -55,7 +38,13 @@ def get_most_relevant_sentence(query):
     max_similarity = 0
     most_relevant_sentence = ""
     for sentence in corpus:
-        similarity = len(set(query).intersection(sentence)) / float(len(set(query).union(sentence)))
+        relevance_scores = []
+        for keyword in query:
+            if keyword in sentence:
+                relevance_scores.append(1)
+            else:
+                relevance_scores.append(0)
+        similarity = sum(relevance_scores) / len(query)
         if similarity > max_similarity:
             max_similarity = similarity
             most_relevant_sentence = " ".join(sentence)
@@ -71,7 +60,7 @@ def chatbot(question):
 # Create a Streamlit app
 def main():
     st.title("Chatbot")
-    st.write("Hello! I'm a chatbot. Ask me anything about the topic in Moby Dick.")
+    st.write("Hello! I'm a chatbot. Ask me anything about Moby Dick.")
     # Get the user's question
     question = st.text_input("You:")
     # Create a button to submit the question
