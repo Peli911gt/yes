@@ -34,7 +34,7 @@ def get_most_relevant_sentence(query):
     most_relevant_sentence = ""
     for sentence in corpus:
         common_words = set(query).intersection(sentence)
-        similarity = len(common_words) / float(len(query))
+        similarity = len(common_words) / float(len(sentence))
         if similarity > max_similarity:
             max_similarity = similarity
             most_relevant_sentence = " ".join(sentence)
