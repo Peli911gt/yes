@@ -6,7 +6,6 @@ nltk.download('wordnet')
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from sklearn.feature_extraction.text import TfidfVectorizer
 import string
 import streamlit as st
 
@@ -29,24 +28,18 @@ def preprocess(sentence):
 # Preprocess each sentence in the text
 corpus = [preprocess(sentence) for sentence in sentences]
 
-# Convert preprocessed sentences back to strings
-corpus_strings = [" ".join(words) for words in corpus]
-
 # Define a function to find the most relevant sentence given a query
 def get_most_relevant_sentence(query):
     # Preprocess the query
     query = preprocess(query)
-    # Convert query to string
-    query_string = " ".join(query)
-    # Vectorize the corpus and query
-    vectorizer = TfidfVectorizer()
-    vectors = vectorizer.fit_transform(corpus_strings + [query_string])
-    query_vector = vectors[-1]
-    corpus_vectors = vectors[:-1]
-    # Compute the cosine similarity between the query and each sentence in the text
-    similarities = corpus_vectors.dot(query_vector.T).toarray().flatten()
-    most_similar_index = similarities.argmax()
-    most_relevant_sentence = " ".join(corpus[most_similar_index])
+    # Compute the similarity between the query and each sentence in the text
+    max_similarity = 0
+    most_relevant_sentence = ""
+    for sentence in corpus:
+        similarity = len(set(query).intersection(sentence)) / float(len(set(query).union(sentence)))
+        if similarity > max_similarity:
+            max_similarity = similarity
+            most_relevant_sentence = " ".join(sentence)
     return most_relevant_sentence
 
 # Define the chatbot function
@@ -59,7 +52,7 @@ def chatbot(question):
 # Create a Streamlit app
 def main():
     st.title("Chatbot")
-    st.write("Hello! I'm a chatbot. Ask me anything about Moby Dick.")
+    st.write("Hello! I'm a chatbot. Ask me anything about the topic in Moby Dick.")
     # Get the user's question
     question = st.text_input("You:")
     # Create a button to submit the question
