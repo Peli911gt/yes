@@ -6,6 +6,7 @@ nltk.download('wordnet')
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 import string
 import streamlit as st
 
@@ -28,19 +29,24 @@ def preprocess(sentence):
 # Preprocess each sentence in the text
 corpus = [preprocess(sentence) for sentence in sentences]
 
+# Convert preprocessed sentences back to strings
+corpus_strings = [" ".join(words) for words in corpus]
+
 # Define a function to find the most relevant sentence given a query
 def get_most_relevant_sentence(query):
     # Preprocess the query
     query = preprocess(query)
-    # Compute the similarity between the query and each sentence in the text
-    max_similarity = 0
-    most_relevant_sentence = ""
-    for sentence in corpus:
-        if sentence != query:  # Exclude the query itself
-            similarity = len(set(query).intersection(sentence)) / float(len(set(query).union(sentence)))
-            if similarity > max_similarity:
-                max_similarity = similarity
-                most_relevant_sentence = " ".join(sentence)
+    # Convert query to string
+    query_string = " ".join(query)
+    # Vectorize the corpus and query
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(corpus_strings + [query_string])
+    query_vector = vectors[-1]
+    corpus_vectors = vectors[:-1]
+    # Compute the cosine similarity between the query and each sentence in the text
+    similarities = corpus_vectors.dot(query_vector.T).toarray().flatten()
+    most_similar_index = similarities.argmax()
+    most_relevant_sentence = " ".join(corpus[most_similar_index])
     return most_relevant_sentence
 
 # Define the chatbot function
