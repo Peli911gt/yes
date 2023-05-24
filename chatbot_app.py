@@ -53,7 +53,7 @@ def chatbot(question):
 # Create a Streamlit app
 def main():
     st.title("Chatbot")
-    st.write("Hello! I'm a chatbot. Ask me anything about the text.")
+    st.write("Hello! I'm a chatbot. Ask me anything about Moby Dick.")
     # Get the user's question
     question = st.text_input("You:")
     # Create a button to submit the question
