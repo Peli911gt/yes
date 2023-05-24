@@ -19,11 +19,13 @@ def preprocess(sentence):
     # Tokenize the sentence into words
     words = word_tokenize(sentence)
     # Remove stopwords and punctuation
-    words = [word.lower() for word in words if word.lower() not in stopwords.words('english') and word not in string.punctuation]
+    stop_words = set(stopwords.words('english')) - {'and', 'his', 'in', 'the', 'a'}
+    words = [word.lower() for word in words if word.lower() not in stop_words and word not in string.punctuation]
     # Lemmatize the words
     lemmatizer = WordNetLemmatizer()
     words = [lemmatizer.lemmatize(word) for word in words]
     return words
+
 
 # Preprocess each sentence in the text
 corpus = [preprocess(sentence) for sentence in sentences]
