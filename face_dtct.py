@@ -37,7 +37,7 @@ def main():
         # Adjust the parameters
         min_neighbors = st.slider("Adjust minNeighbors", 1, 10, 5)
         scale_factor = st.slider("Adjust scaleFactor", 1.1, 2.0, 1.2, step=0.1)
-        cv2.rectangle(image, (x, y), (x + w, y + h), (int(rect_color[0]), int(rect_color[1]), int(rect_color[2])), 2)
+        cv2.rectangle(image, (x, y), (x + w, y + h), tuple(map(int, rect_color)), 2)
 
 
         # Detect faces and draw rectangles
