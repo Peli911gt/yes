@@ -1,4 +1,4 @@
-opencv-python
+streamlit
 numpy
-pyvirtualdisplay
-xvfb
+Pillow
+opencv-python
