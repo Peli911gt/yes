@@ -1,6 +1,2 @@
-streamlit
 numpy
-Pillow
 opencv-python
-face_recognition
-CMake 
