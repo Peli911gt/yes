@@ -15,7 +15,7 @@ def detect_faces(image, scaleFactor, minNeighbors, rect_color):
 
     # Draw rectangles around the detected faces
     for (x, y, w, h) in faces:
-        cv2.rectangle(image, (x, y), (x + w, y + h), rect_color, 2)
+    cv2.rectangle(image, (x, y), (x + w, y + h), (int(rect_color[2]), int(rect_color[1]), int(rect_color[0])), 2)
 
     return image
 
