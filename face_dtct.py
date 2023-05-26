@@ -1,5 +1,7 @@
 import cv2
 import streamlit as st
+import os
+os.environ['LD_PRELOAD'] = '/usr/lib/x86_64-linux-gnu/libGL.so'
 
 # Add instructions to the interface
 st.write("# Face Detection App")
