@@ -4,7 +4,9 @@ st.write("Please upload an image and adjust the parameters to detect faces.")
 cv2.imwrite("output.jpg", image)
 st.write("Image saved successfully!")
 # Allow the user to choose the color
-rect_color = st.color_picker("Rectangle Color", "#FF# Allow the user to adjust the scaleFactor parameter
+# Allow the user to choose the color
+rect_color = st.color_picker("Rectangle Color", "#FF0000")
+
 scale_factor = st.slider("scaleFactor", min_value=1.1, max_value=2.0, value=1.2, step=0.1)
 0000")
 # Allow the user to adjust the minNeighbors parameter
