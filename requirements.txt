@@ -1,3 +1,5 @@
 streamlit
 opencv-python
 numpy
+streamlit==0.88.0
+speechrecognition==3.8.1
