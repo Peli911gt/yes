@@ -6,7 +6,8 @@ pydub
 pyspeech
 SpeechRecognition 
 ffmpeg
- 
+ffmpeg-python
+
 google-cloud-speech
 wit
 ibm-watson
