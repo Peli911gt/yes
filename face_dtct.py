@@ -21,8 +21,8 @@ def main():
 
         scale_factor = st.slider("Scale Factor", min_value=1.1, max_value=3.0, step=0.1, value=1.2)
         min_neighbors = st.slider("Min Neighbors", min_value=1, max_value=10, step=1, value=5)
-        rect_color = st.color_picker("Rectangle Color", value="#FF0000")
-        rect_color = tuple(int(rect_color[i:i+2], 16) for i in (1, 3, 5))
+        rect_color = st.color_picker("Rectangle Color", value=(1.0, 0.0, 0.0))
+        rect_color = tuple(int(rect_color[i] * 255) for i in range(2, -1, -1))
 
         if st.button("Detect Faces"):
             result_image = detect_faces(image, scale_factor, min_neighbors, rect_color)
