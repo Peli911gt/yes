@@ -1,5 +1,5 @@
 import streamlit as st
-import sounddevice as sd
+from pydub import AudioSegment
 import pyspeech
 
 def main():
@@ -17,35 +17,31 @@ def main():
     # User input for language selection
     language = st.text_input("Enter the language you are speaking in")
 
-    # Transcribe speech
-    text = transcribe_speech(api, language)
+    # Upload audio file
+    audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
 
-    # Display the transcribed text
-    st.text("Transcribed Text:")
-    st.text(text)
+    if audio_file is not None:
+        # Load audio file
+        audio = AudioSegment.from_file(audio_file)
 
-    # Save transcribed text to a file
-    save_to_file = st.button("Save to File")
-    if save_to_file:
-        filename = st.text_input("Enter the filename")
-        if filename:
-            save_transcribed_text(text, filename)
-            st.success(f"Transcribed text saved to {filename}")
+        # Convert audio to mono if it has multiple channels
+        if audio.channels > 1:
+            audio = audio.set_channels(1)
 
-def transcribe_speech(api, language):
-    fs = 44100  # Sample rate
-    duration = 5  # Recording duration in seconds
+        # Transcribe speech
+        text = recognizer.transcribe(audio.get_array_of_samples(), audio.frame_rate, api, language)
 
-    with sd.rec(int(duration * fs), samplerate=fs, channels=1, blocking=True):
-        st.text("Listening...")
+        # Display the transcribed text
+        st.text("Transcribed Text:")
+        st.text(text)
 
-        audio = sd.rec(int(duration * fs), samplerate=fs, channels=1)
-        sd.wait()
-
-    st.text("Transcribing...")
-    text = recognizer.transcribe(audio[:, 0], fs, api, language)
-
-    return text
+        # Save transcribed text to a file
+        save_to_file = st.button("Save to File")
+        if save_to_file:
+            filename = st.text_input("Enter the filename")
+            if filename:
+                save_transcribed_text(text, filename)
+                st.success(f"Transcribed text saved to {filename}")
 
 def save_transcribed_text(text, filename):
     with open(filename, "w") as file:
