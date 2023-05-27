@@ -2,8 +2,9 @@ streamlit
 opencv-python
 numpy
 pocketsphinx
-sounddevice
+pydub
 pyspeech
+
  
 google-cloud-speech
 wit
