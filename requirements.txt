@@ -4,7 +4,8 @@ numpy
 pocketsphinx
 pydub
 pyspeech
-
+SpeechRecognition 
+ffmpeg
  
 google-cloud-speech
 wit
