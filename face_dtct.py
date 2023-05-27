@@ -7,7 +7,7 @@ def detect_faces(image, scale_factor, min_neighbors, rect_color):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(gray, scale_factor, min_neighbors)
     for (x, y, w, h) in faces:
-        cv2.rectangle(image, (x, y), (x + w, y + h), (int(rect_color[2]), int(rect_color[1]), int(rect_color[0])), 2)
+        cv2.rectangle(image, (x, y), (x + w, y + h), rect_color, 2)
     return image
 
 def main():
@@ -22,6 +22,7 @@ def main():
         scale_factor = st.slider("Scale Factor", min_value=1.1, max_value=3.0, step=0.1, value=1.2)
         min_neighbors = st.slider("Min Neighbors", min_value=1, max_value=10, step=1, value=5)
         rect_color = st.color_picker("Rectangle Color", value="#FF0000")
+        rect_color = tuple(int(rect_color[i:i+2], 16) for i in (1, 3, 5))
 
         if st.button("Detect Faces"):
             result_image = detect_faces(image, scale_factor, min_neighbors, rect_color)
