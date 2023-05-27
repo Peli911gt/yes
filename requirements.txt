@@ -1,7 +1,7 @@
 streamlit
 opencv-python
 numpy
-SpeechRecognition 
+pocketsphinx 
 pyaudio
 google-cloud-speech
 wit
