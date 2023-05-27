@@ -7,7 +7,8 @@ def detect_faces(image, scale_factor, min_neighbors, rect_color):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(gray, scale_factor, min_neighbors)
     for (x, y, w, h) in faces:
-        cv2.rectangle(image, (x, y), (x + w, y + h), rect_color, 2)
+        bgr_color = tuple(reversed(rect_color))
+        cv2.rectangle(image, (x, y), (x + w, y + h), bgr_color, 2)
     return image
 
 def main():
