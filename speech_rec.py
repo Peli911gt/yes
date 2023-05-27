@@ -1,79 +1,61 @@
 import streamlit as st
 import speech_recognition as sr
-from pydub import AudioSegment
+
+def transcribe_speech(audio_file, api, language):
+    try:
+        recognizer = sr.Recognizer()
+        with sr.AudioFile(audio_file) as source:
+            audio = recognizer.record(source)  # Read the entire audio file
+            
+        # Select the speech recognition API based on user input
+        if api == 'Google':
+            transcribed_text = recognizer.recognize_google(audio, language=language)
+        elif api == 'Wit.ai':
+            wit_ai_api_key = 'YOUR_WIT_AI_API_KEY'  # Replace with your Wit.ai API key
+            transcribed_text = recognizer.recognize_wit(audio, key=wit_ai_api_key)
+        elif api == 'IBM Watson':
+            ibm_username = 'YOUR_IBM_USERNAME'  # Replace with your IBM Watson username
+            ibm_password = 'YOUR_IBM_PASSWORD'  # Replace with your IBM Watson password
+            transcribed_text = recognizer.recognize_ibm(audio, username=ibm_username, password=ibm_password, language=language)
+        else:
+            raise ValueError('Invalid speech recognition API selected')
+        
+        return transcribed_text
+    except sr.UnknownValueError:
+        raise ValueError('Speech recognition could not understand audio')
+    except sr.RequestError:
+        raise ValueError('Could not connect to the speech recognition service')
 
 def main():
-    st.title("Speech Recognition App")
+    st.title('Speech to Text Transcription')
 
-    # Initialize the recognizer
-    recognizer = sr.Recognizer()
+    # File upload
+    st.subheader('Upload an audio file:')
+    audio_file = st.file_uploader('Choose an audio file', type=['wav', 'mp3'])
 
-    # Get available APIs
-    api_options = ["Google", "Wit.ai", "IBM Watson"]
+    if audio_file:
+        # Speech recognition API selection
+        st.subheader('Speech Recognition API:')
+        api_options = ['Google', 'Wit.ai', 'IBM Watson']
+        api = st.selectbox('Select an API', api_options)
 
-    # User input for API selection
-    api = st.selectbox("Select Speech Recognition API", api_options)
-
-    # User input for language selection
-    language = st.text_input("Enter the language you are speaking in")
-
-    # Upload audio file
-    audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
-
-    if audio_file is not None:
-        # Load audio file
-        audio = AudioSegment.from_file(audio_file)
-
-        # Convert audio to mono if it has multiple channels
-        if audio.channels > 1:
-            audio = audio.set_channels(1)
-
-        # Save audio to a temporary file
-        temp_file = "temp.wav"
-        audio.export(temp_file, format="wav")
+        # Language selection
+        st.subheader('Language:')
+        language = st.text_input('Enter the language code (e.g., en-US)')
 
         # Transcribe speech
-        text = transcribe_audio(temp_file, api, language)
+        if st.button('Transcribe'):
+            try:
+                transcribed_text = transcribe_speech(audio_file, api, language)
+                st.success('Transcription Successful:')
+                st.text_area('Transcribed Text', value=transcribed_text, height=200)
 
-        # Display the transcribed text
-        st.text("Transcribed Text:")
-        st.text(text)
+                # Save to file
+                if st.button('Save Transcription'):
+                    save_text_to_file(transcribed_text)
+                    st.success('Transcribed text saved to file')
+            except ValueError as e:
+                st.error(str(e))
 
-        # Save transcribed text to a file
-        save_to_file = st.button("Save to File")
-        if save_to_file:
-            filename = st.text_input("Enter the filename")
-            if filename:
-                save_transcribed_text(text, filename)
-                st.success(f"Transcribed text saved to {filename}")
-
-        # Delete the temporary audio file
-        os.remove(temp_file)
-
-def transcribe_audio(audio_file, api, language):
-    # Open the audio file
-    with sr.AudioFile(audio_file) as source:
-        # Load audio data
-        audio_data = recognizer.record(source)
-
-        # Choose the appropriate API
-        if api == "Google":
-            text = recognizer.recognize_google(audio_data, language=language)
-        elif api == "Wit.ai":
-            wit_ai_api_key = "YOUR_WIT_AI_API_KEY"  # Replace with your Wit.ai API key
-            text = recognizer.recognize_wit(audio_data, key=wit_ai_api_key)
-        elif api == "IBM Watson":
-            ibm_watson_api_key = "YOUR_IBM_WATSON_API_KEY"  # Replace with your IBM Watson API key
-            ibm_watson_url = "YOUR_IBM_WATSON_URL"  # Replace with your IBM Watson API URL
-            text = recognizer.recognize_ibm(audio_data, username=ibm_watson_api_key, password=ibm_watson_url)
-        else:
-            text = ""
-
-    return text
-
-def save_transcribed_text(text, filename):
-    with open(filename, "w") as file:
-        file.write(text)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
