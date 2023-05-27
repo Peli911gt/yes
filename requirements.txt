@@ -1,7 +1,10 @@
 streamlit
 opencv-python
 numpy
-pocketsphinx 
+pocketsphinx
+pyaudio
+pyspeech
+ 
 google-cloud-speech
 wit
 ibm-watson
