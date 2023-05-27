@@ -2,54 +2,35 @@ import streamlit as st
 import cv2
 import numpy as np
 
-# Function to detect faces and draw rectangles
-def detect_faces(image, scaleFactor, minNeighbors, rect_color):
-    # Convert image to grayscale
+def detect_faces(image, scale_factor, min_neighbors, rect_color):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Load the face cascade classifier
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
-    # Detect faces in the image
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=scaleFactor, minNeighbors=minNeighbors)
-
-    # Draw rectangles around the detected faces
+    faces = face_cascade.detectMultiScale(gray, scale_factor, min_neighbors)
     for (x, y, w, h) in faces:
-    cv2.rectangle(image, (x, y), (x + w, y + h), (int(rect_color[2]), int(rect_color[1]), int(rect_color[0])), 2)
-
+        cv2.rectangle(image, (x, y), (x + w, y + h), (int(rect_color[2]), int(rect_color[1]), int(rect_color[0])), 2)
     return image
 
 def main():
-    # Title and instructions
-    st.write("# Face Detection App")
-    st.write("Upload an image and adjust the parameters to detect and visualize faces.")
+    st.title("Face Detection App")
+    st.write("Please upload an image.")
+    image_file = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
 
-    # Upload an image file
-    uploaded_file = st.file_uploader("Choose an image", type=["jpg", "jpeg", "png"])
+    if image_file is not None:
+        image = np.array(bytearray(image_file.read()), dtype=np.uint8)
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    if uploaded_file is not None:
-        # Read the image file
-        image = np.array(cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), 1))
+        scale_factor = st.slider("Scale Factor", min_value=1.1, max_value=3.0, step=0.1, value=1.2)
+        min_neighbors = st.slider("Min Neighbors", min_value=1, max_value=10, step=1, value=5)
+        rect_color = st.color_picker("Rectangle Color", value="#FF0000")
 
-        # Display the original image
-        st.image(image, channels="BGR", caption="Original Image")
+        if st.button("Detect Faces"):
+            result_image = detect_faces(image, scale_factor, min_neighbors, rect_color)
+            st.image(result_image, channels="BGR")
 
-        # Adjust the parameters
-        min_neighbors = st.slider("Adjust minNeighbors", 1, 10, 5)
-        scale_factor = st.slider("Adjust scaleFactor", 1.1, 2.0, 1.2, step=0.1)
-       cv2.rectangle(image, (x, y), (x + w, y + h), (int(rect_color[0]), int(rect_color[1]), int(rect_color[2])), 2)
-
-
-        # Detect faces and draw rectangles
-        result_image = detect_faces(image, scale_factor, min_neighbors, rect_color)
-
-        # Display the result image with detected faces
-        st.image(result_image, channels="BGR", caption="Result Image")
-
-        # Save the result image
-        if st.button("Save Image"):
-            cv2.imwrite("result_image.jpg", result_image)
-            st.write("Image saved successfully!")
+            save_option = st.checkbox("Save Image")
+            if save_option:
+                cv2.imwrite("result_image.jpg", result_image)
+                st.success("Image saved successfully.")
 
 if __name__ == "__main__":
     main()
