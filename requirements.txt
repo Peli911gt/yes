@@ -1,6 +1,10 @@
 streamlit
 opencv-python
 numpy
-speechrecognition
+speech_recognition
 pyaudio
 google-cloud-speech
+wit
+ibm-watson
+azure-cognitiveservices-speech
+deepspeech
