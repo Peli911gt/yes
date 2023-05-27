@@ -7,7 +7,7 @@ pyspeech
 SpeechRecognition 
 ffmpeg
 ffmpeg-python
-
+ffprobe 
 google-cloud-speech
 wit
 ibm-watson
