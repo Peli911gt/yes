@@ -31,7 +31,7 @@ def main():
 
     # File upload
     st.subheader('Upload an audio file:')
-    audio_file = st.file_uploader('Choose an audio file', type=['wav', 'mp3'])
+    audio_file = st.file_uploader('Choose an audio file', type=['wav', 'Native FLAC','AIFF/AIFF-C'])
 
     if audio_file:
         # Speech recognition API selection
