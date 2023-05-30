@@ -13,4 +13,4 @@ wit
 ibm-watson
 azure-cognitiveservices-speech
 deepspeech
-ntlk
+nltk
