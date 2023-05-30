@@ -12,5 +12,3 @@ ibm-watson
 azure-cognitiveservices-speech
 deepspeech
 nltk
-SoundDevice 
-portaudio
