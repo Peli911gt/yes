@@ -2,9 +2,12 @@ import nltk
 import streamlit as st
 import speech_recognition as sr
 
+# Load and preprocess the data using the chatbot algorithm
+# ...
+# Define a function to transcribe speech into text using the speech recognition algorithm
 def transcribe_speech():
     r = sr.Recognizer()
-    with sr.Microphone(device_index=None, options={}) as source:
+    with sr.Microphone() as source:
         st.write("Speak something...")
         audio = r.listen(source)
 
@@ -18,6 +21,7 @@ def transcribe_speech():
         st.write("Sorry, there was an issue with the speech recognition service.")
         return ""
 
+# Modify the chatbot function to handle both text and speech input
 def chatbot(input_text):
     # Your chatbot algorithm implementation
     # Use the input_text to generate a response
