@@ -12,3 +12,4 @@ ibm-watson
 azure-cognitiveservices-speech
 deepspeech
 nltk
+pyaudio
