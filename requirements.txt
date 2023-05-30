@@ -4,7 +4,6 @@ numpy
 pocketsphinx
 pydub
 pyspeech
-pyaudio
 SpeechRecognition 
 ffmpeg
 ffmpeg-python
