@@ -14,4 +14,4 @@ ibm-watson
 azure-cognitiveservices-speech
 deepspeech
 nltk
-sounddevice 
+SoundDevice 
