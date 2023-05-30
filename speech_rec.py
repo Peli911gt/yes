@@ -1,49 +1,51 @@
-import nltk
 import streamlit as st
 import speech_recognition as sr
+from google.cloud import speech_v1p1beta1 as speech
 
-# Load and preprocess the data using the chatbot algorithm
-# ...
-# Define a function to transcribe speech into text using the speech recognition algorithm
+# Function to transcribe speech using Google Cloud Speech-to-Text API
 def transcribe_speech():
+    # Configure speech recognition client
+    client = speech.SpeechClient()
+
+    # Start recording audio from the microphone
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        st.write("Speak something...")
+        st.write("Listening... Say something!")
         audio = r.listen(source)
 
-    try:
-        text = r.recognize_google(audio)
-        return text
-    except sr.UnknownValueError:
-        st.write("Sorry, I could not understand your speech.")
-        return ""
-    except sr.RequestError:
-        st.write("Sorry, there was an issue with the speech recognition service.")
-        return ""
+    # Transcribe the recorded audio using Google Cloud Speech-to-Text API
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code="en-US",
+    )
+    audio_data = speech.RecognitionAudio(content=audio.get_raw_data())
+    response = client.recognize(config=config, audio=audio_data)
 
-# Modify the chatbot function to handle both text and speech input
-def chatbot(input_text):
-    # Your chatbot algorithm implementation
-    # Use the input_text to generate a response
-    response = "Your chatbot response"
-    return response
+    # Extract the transcribed text from the response
+    text = ""
+    for result in response.results:
+        text += result.alternatives[0].transcript
 
+    return text
+
+# Main function
 def main():
-    st.title("Speech-enabled Chatbot")
+    st.title("Speech-Enabled Chatbot")
 
+    # Get user input (text or speech)
     input_type = st.radio("Input Type", ("Text", "Speech"))
-
     if input_type == "Text":
-        text_input = st.text_input("User Input", "")
-        if st.button("Send"):
-            response = chatbot(text_input)
-            st.write("Response:", response)
+        text_input = st.text_input("Enter your message")
     else:
-        if st.button("Start Recording"):
-            text_input = transcribe_speech()
-            if text_input:
-                response = chatbot(text_input)
-                st.write("Response:", response)
+        text_input = transcribe_speech()
 
+    # Call chatbot algorithm to generate response
+    response = chatbot(text_input)
+
+    # Display the chatbot response
+    st.write("Chatbot:", response)
+
+# Run the app
 if __name__ == "__main__":
     main()
