@@ -2,9 +2,6 @@ streamlit
 opencv-python
 numpy
 pocketsphinx
-pydub
-pyAudio
-pyspeech
 SpeechRecognition 
 ffmpeg
 ffmpeg-python
@@ -16,3 +13,4 @@ azure-cognitiveservices-speech
 deepspeech
 nltk
 SoundDevice 
+portaudio
