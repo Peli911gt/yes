@@ -1,21 +1,18 @@
 import nltk
 import streamlit as st
 import speech_recognition as sr
-import sounddevice as sd
-import numpy as np
+import pyaudio
 
 def transcribe_speech():
     r = sr.Recognizer()
     fs = 44100
     duration = 5  # Adjust the duration as needed
 
-    with sd.rec(int(duration * fs), samplerate=fs, channels=1):
+    with sr.Microphone() as source:
         st.write("Speak something...")
-        sd.wait()
+        audio = r.record(source, duration=duration)
 
     try:
-        audio = sd.rec(int(duration * fs), samplerate=fs, channels=1)
-        audio = np.squeeze(audio)
         text = r.recognize_google(audio)
         return text
     except sr.UnknownValueError:
