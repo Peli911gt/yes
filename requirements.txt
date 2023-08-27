@@ -13,4 +13,4 @@ pyaudio
 nltk==3.6.2
 speechrecognition==3.8.1
 google-cloud-speech==2.5.1
-xgboost
+
